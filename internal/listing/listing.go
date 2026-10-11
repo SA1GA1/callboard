@@ -52,7 +52,7 @@ func ValidationListing(listing Listing) error {
 	}
 
 	if placeLettersCount == 0 || placeLettersCount > 20 {
-		return errors.New("ERROR: incorrect place of listing") // временная проверка, пока нет справочника
+		return errors.New("ERROR: incorrect place of listing")
 	}
 
 	return nil
