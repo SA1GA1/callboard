@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 	"net"
 	"net/url"
 	"os"
@@ -14,14 +13,20 @@ import (
 )
 
 func main() {
-	if err := checkPostgres(); err != nil {
-		log.Fatalf("%v", err)
+	ctx,cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	pool, err := initDataBase(ctx)
+	if err != nil {
+		fmt.Printf("ERROR: connect with db does not correct: %v\n",err)
+		cancel()
+		os.Exit(3)
 	} else {
 		fmt.Println("SUCCESS: connect with db is correct")
 	}
+	defer pool.Close()
 }
 
-func checkPostgres() error {
+func initDataBase(ctx context.Context) (*pgxpool.Pool, error) {
 
 	dbUser := os.Getenv("POSTGRES_USER")
 	dbPassword := os.Getenv("POSTGRES_PASSWORD")
@@ -30,7 +35,7 @@ func checkPostgres() error {
 	dbName := os.Getenv("POSTGRES_DB")
 
 	if dbUser == "" || dbPassword == "" || dbHost == "" || dbPort == "" || dbName == "" {
-		return errors.New("ERROR: incorrect env params")
+		return nil, errors.New("ERROR: incorrect env params")
 	}
 
 	url := url.URL{
@@ -40,22 +45,19 @@ func checkPostgres() error {
 		Path: dbName,
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
-	defer cancel()
-
 	connStr := url.String()
 
 	pool, err := pgxpool.New(ctx, connStr)
 
 	if err != nil {
-		return errors.New("ERROR: pool for postgres not created")
+		return nil, fmt.Errorf("ERROR: pool for postgres not created: %w", err)
 	}
-	defer pool.Close()
 
 	err = pool.Ping(ctx)
 	if err != nil {
-		return errors.New("ERROR: data base unavailable")
+		defer pool.Close()
+		return nil, fmt.Errorf("ERROR: data base unavailable: %w", err)
 	}
 
-	return nil
+	return pool, nil
 }
