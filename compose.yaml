@@ -1,4 +1,5 @@
 services:
+
   postgres:
     container_name: postgres
     image: postgres:18
@@ -12,5 +13,20 @@ services:
       - pg_listings_data:/var/lib/postgresql
     restart: always
 
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "${POSTGRES_IP}:8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    restart: always
+    depends_on:
+      - postgres
+
 volumes:
   pg_listings_data:
+  pgadmin_data:
