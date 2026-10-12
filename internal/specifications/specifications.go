@@ -1,9 +1,9 @@
 package specifications
 
 type Specifications struct {
-	Category      string
-	Brand         string
-	Model         string
-	Condition     string
-	SellingReason string
+	Category      string `json:"category"`
+	Brand         string `json:"brand"`
+	Model         string `json:"model"`
+	Condition     string `json:"condition"`
+	SellingReason string `json:"sellingreason"`
 }
