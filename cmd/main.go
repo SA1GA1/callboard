@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"callboard/internal/listing"
+	"callboard/internal/specifications"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -17,24 +18,53 @@ import (
 func main() {
 	ctx,cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
 	pool, err := initDataBase(ctx)
+
 	if err != nil {
 		fmt.Printf("ERROR: connect with db does not correct: %v\n",err)
 		cancel()
 		os.Exit(3)
-	} else {
-		fmt.Println("SUCCESS: connect with db is correct")
 	}
+
 	defer pool.Close()
+
+	testListing := listing.Listing {
+		Title: "2крутая книга",
+		Description: "2очень интересная книга",
+		Photos: []string{
+			"https://i.pinimg.com/736x/d9/fb/1b/d9fb1bf9a64cc80675801ba9a61840e7.jpg",
+			"https://i.pinimg.com/736x/d9/fb/1b/d9fb1bf9a64cc80675801ba9a61840e7.jpg",
+		},
+		SellerID: 2,
+		Price: 1000,
+		Specifications: specifications.Specifications{Category: "2книги"},
+		Place: "2Казань",
+	}
+
+	if err := listing.ValidationListing(testListing); err != nil {
+		fmt.Printf("ERROR: incorrect validation for listing: %v\n", err)
+		os.Exit(3)
+	} 
+	
+	newListingId, err := createListingInDB(ctx, testListing, pool)
+
+	if err != nil {
+		fmt.Printf("ERROR: incorrect save listing in db: %v", err)
+	} else {
+		fmt.Printf("ID of created listing: %d", newListingId)
+	}
+
+
 }
 
 func initDataBase(ctx context.Context) (*pgxpool.Pool, error) {
 
+	dbName := os.Getenv("POSTGRES_DB")
 	dbUser := os.Getenv("POSTGRES_USER")
-	dbPassword := os.Getenv("POSTGRES_PASSWORD")
 	dbHost := os.Getenv("POSTGRES_HOST")
 	dbPort := os.Getenv("POSTGRES_PORT")
-	dbName := os.Getenv("POSTGRES_DB")
+	dbPassword := os.Getenv("POSTGRES_PASSWORD")
 
 	if dbUser == "" || dbPassword == "" || dbHost == "" || dbPort == "" || dbName == "" {
 		return nil, errors.New("ERROR: incorrect env params")
@@ -64,7 +94,7 @@ func initDataBase(ctx context.Context) (*pgxpool.Pool, error) {
 	return pool, nil
 }
 
-func createDataBaseListing(ctx context.Context, item listing.Listing, pool *pgxpool.Pool) (int64, error) {
+func createListingInDB(ctx context.Context, item listing.Listing, pool *pgxpool.Pool) (int64, error) {
 
 	tx, err := pool.Begin(ctx)
 
