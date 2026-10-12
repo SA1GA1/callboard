@@ -41,7 +41,7 @@ func CreateListingInDB(ctx context.Context, item Listing, pool *pgxpool.Pool) (i
 	}
 
 	for i := range item.Photos {
-		_,err = tx.Exec(ctx,
+		_, err = tx.Exec(ctx,
 			"INSERT INTO photos (listing_id, url) VALUES ($1, $2)",
 			newListingId, item.Photos[i],
 		)
@@ -50,7 +50,7 @@ func CreateListingInDB(ctx context.Context, item Listing, pool *pgxpool.Pool) (i
 		}
 	}
 
-	if err:=tx.Commit(ctx); err != nil {
+	if err := tx.Commit(ctx); err != nil {
 		return 0, fmt.Errorf("ERROR: %w", err)
 	}
 

@@ -19,10 +19,10 @@ type Listing struct {
 }
 
 type CreateListingRequest struct {
-	Title          string `json:"title"`
-	Description    string `json:"description"`
-	Photos         []string `json:"photos"`
-	Price          int64 `json:"price"`
+	Title          string                        `json:"title"`
+	Description    string                        `json:"description"`
+	Photos         []string                      `json:"photos"`
+	Price          int64                         `json:"price"`
 	Specifications specifications.Specifications `json:"specifications"`
-	Place          string `json:"place"`
+	Place          string                        `json:"place"`
 }

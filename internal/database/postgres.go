@@ -25,9 +25,9 @@ func InitDataBase(ctx context.Context) (*pgxpool.Pool, error) {
 
 	url := url.URL{
 		Scheme: "postgres",
-		User: url.UserPassword(dbUser, dbPassword),
-		Host: net.JoinHostPort(dbHost,dbPort),
-		Path: dbName,
+		User:   url.UserPassword(dbUser, dbPassword),
+		Host:   net.JoinHostPort(dbHost, dbPort),
+		Path:   dbName,
 	}
 
 	connStr := url.String()

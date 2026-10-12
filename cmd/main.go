@@ -13,13 +13,13 @@ import (
 )
 
 func main() {
-	ctx,cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	pool, err := database.InitDataBase(ctx)
 
 	if err != nil {
-		fmt.Printf("ERROR: connect with db does not correct: %v\n",err)
+		fmt.Printf("ERROR: connect with db does not correct: %v\n", err)
 		cancel()
 		os.Exit(3)
 	}
@@ -42,8 +42,8 @@ func main() {
 	// if err := listing.ValidationListing(testListing); err != nil {
 	// 	fmt.Printf("ERROR: incorrect validation for listing: %v\n", err)
 	// 	os.Exit(3)
-	// } 
-	
+	// }
+
 	// newListingId, err := createListingInDB(ctx, testListing, pool)
 
 	// if err != nil {
@@ -54,9 +54,9 @@ func main() {
 
 	router := gin.Default()
 
-	router.GET("/ping", func(c *gin.Context){
-		c.JSON(http.StatusOK, gin.H {
-			"message":"pong",
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "pong",
 		})
 	})
 
