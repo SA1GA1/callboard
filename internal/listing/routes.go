@@ -1,12 +1,14 @@
 package listing
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
-func RegisterRoutes(rg *gin.RouterGroup) {
+func (h *ListingHandler) RegisterRoutes(rg *gin.RouterGroup) {
 	listings := rg.Group("/listings")
 	{
 		listings.GET("/")
-		listings.POST("/")
+		listings.POST("/", h.CreateListingHandler)
 		listings.PUT("/")
 		listings.DELETE("/")
 	}

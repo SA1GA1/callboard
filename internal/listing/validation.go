@@ -6,7 +6,7 @@ import (
 	"unicode/utf8"
 )
 
-func ValidationListing(listing Listing) error {
+func ValidationListing(listing CreateListingRequest) error {
 
 	titleLettersCount := utf8.RuneCountInString(strings.TrimSpace(listing.Title))
 	descriptionLettersCount := utf8.RuneCountInString(strings.TrimSpace(listing.Description))
