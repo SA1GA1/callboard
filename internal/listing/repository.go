@@ -7,7 +7,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func CreateListingInDB(ctx context.Context, item Listing, pool *pgxpool.Pool) (int64, error) {
+func CreateListing(ctx context.Context, item Listing, pool *pgxpool.Pool) (int64, error) {
 
 	tx, err := pool.Begin(ctx)
 
@@ -57,7 +57,7 @@ func CreateListingInDB(ctx context.Context, item Listing, pool *pgxpool.Pool) (i
 	return newListingId, nil
 }
 
-func GetListingByIdInDB(ctx context.Context, id int64, pool *pgxpool.Pool) (Listing, error) {
+func GetListingById(ctx context.Context, id int64, pool *pgxpool.Pool) (Listing, error) {
 
 	tx, err := pool.Begin(ctx)
 
@@ -113,7 +113,7 @@ func GetListingByIdInDB(ctx context.Context, id int64, pool *pgxpool.Pool) (List
 	return l, nil
 }
 
-func GetListingWithPaginationInDB(ctx context.Context, pool *pgxpool.Pool, page int) ([]Listing, error) {
+func GetListingWithPagination(ctx context.Context, pool *pgxpool.Pool, page int) ([]Listing, error) {
 
 	if page < 1 {
 		page = 1
