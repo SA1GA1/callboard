@@ -51,3 +51,11 @@ func (h *ListingHandler) CreateListingHandler(c *gin.Context) {
 	c.JSON(http.StatusCreated, newId)
 
 }
+
+func (h *ListingHandler) GetListingHandlerByID(c *gin.Context) {
+
+}
+
+func (h *ListingHandler) GetListingHandler(c *gin.Context) {
+
+}

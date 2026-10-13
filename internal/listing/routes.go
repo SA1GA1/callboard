@@ -8,6 +8,7 @@ func (h *ListingHandler) RegisterRoutes(rg *gin.RouterGroup) {
 	listings := rg.Group("/listings")
 	{
 		listings.GET("/")
+		listings.GET("/:id")
 		listings.POST("/", h.CreateListingHandler)
 		listings.PUT("/")
 		listings.DELETE("/")
