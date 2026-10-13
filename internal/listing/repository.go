@@ -57,7 +57,7 @@ func CreateListing(ctx context.Context, item Listing, pool *pgxpool.Pool) (int64
 	return newListingId, nil
 }
 
-func GetListingById(ctx context.Context, id int64, pool *pgxpool.Pool) (Listing, error) {
+func GetListingById(ctx context.Context, pool *pgxpool.Pool, id int64) (Listing, error) {
 
 	tx, err := pool.Begin(ctx)
 
@@ -113,14 +113,11 @@ func GetListingById(ctx context.Context, id int64, pool *pgxpool.Pool) (Listing,
 	return l, nil
 }
 
-func GetListingWithPagination(ctx context.Context, pool *pgxpool.Pool, page int) ([]Listing, error) {
+func GetListingWithPagination(ctx context.Context, pool *pgxpool.Pool, page int64) ([]Listing, error) {
 
-	if page < 1 {
-		page = 1
-	}
 	const limit = 20
 
-	offset := (page-1) * limit
+	offset := (page - 1) * limit
 
 	tx, err := pool.Begin(ctx)
 
@@ -158,13 +155,13 @@ func GetListingWithPagination(ctx context.Context, pool *pgxpool.Pool, page int)
 		ORDER BY l.created_at DESC, l.id DESC;
 	`
 
-	rows, err := tx.Query(ctx,query,limit,offset)
+	rows, err := tx.Query(ctx, query, limit, offset)
 	if err != nil {
-		return nil, fmt.Errorf("ERROR: fail of pagination query: %w",err)
+		return nil, fmt.Errorf("ERROR: fail of pagination query: %w", err)
 	}
 	defer rows.Close()
 
-	listings := make([]Listing,0)
+	listings := make([]Listing, 0)
 
 	for rows.Next() {
 		var l Listing
@@ -197,5 +194,5 @@ func GetListingWithPagination(ctx context.Context, pool *pgxpool.Pool, page int)
 		return nil, fmt.Errorf("ERROR: fail of commit: %w", err)
 	}
 
-	return listings,nil
+	return listings, nil
 }

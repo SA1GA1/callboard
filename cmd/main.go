@@ -15,7 +15,6 @@ import (
 func main() {
 	dbCtx, dbCancel := context.WithTimeout(context.Background(), 5*time.Second)
 
-
 	pool, err := database.InitDataBase(dbCtx)
 	dbCancel()
 
