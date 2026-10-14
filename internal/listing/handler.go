@@ -42,7 +42,7 @@ func (h *ListingHandler) CreateListingHandler(c *gin.Context) {
 		Specifications: inputListing.Specifications,
 		Place:          inputListing.Place,
 
-		SellerID: 123, // тестовая заглушка
+		SellerID: 123,
 	}
 
 	newId, err := CreateListing(c.Request.Context(), listing, h.pool)
@@ -93,7 +93,7 @@ func (h *ListingHandler) GetListingHandler(c *gin.Context) {
 
 	maxPage := (math.MaxInt64 / limit) + 1
 	if page > int64(maxPage) {
-		c.JSON(http.StatusBadRequest, gin.H{"error":"page is so large"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "page is so large"})
 		return
 	}
 
